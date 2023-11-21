@@ -1,7 +1,7 @@
 # Copyright VMware, Inc.
 # SPDX-License-Identifier: APACHE-2.0
 
-name: '[Support] Synchronize team members in the .env file'
+name: 'Synchronize team members in the .env file'
 on:
   workflow_dispatch:
   schedule:

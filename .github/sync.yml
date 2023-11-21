@@ -1,4 +1,18 @@
+# Copyright VMware, Inc.
+# SPDX-License-Identifier: APACHE-2.0
+
 # https://github.com/marketplace/actions/repo-file-sync-action#%EF%B8%8F-sync-configuration
-bitnami/support-tes:
+# Test project
+bitnami/support-test:
   - source: workflows/
     dest: .github/workflows/
+# Uncoment once migrated
+# bitnami/charts:
+#   - source: workflows/
+#     dest: .github/workflows/
+# bitnami/containers:
+#   - source: workflows/
+#     dest: .github/workflows/
+# bitnami/vms:
+#   - source: workflows/
+#     dest: .github/workflows/
