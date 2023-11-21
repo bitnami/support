@@ -11,5 +11,5 @@ on:
 permissions: {}
 jobs:
   call-pr-review-workflow:
-    uses: bitnami/support/.github/workflows/pr-reviews.yml@main
+    uses: bitnami/support/.github/workflows/pr-review-requested-sync.yml@main
     secrets: inherit

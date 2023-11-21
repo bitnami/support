@@ -12,5 +12,5 @@ permissions:
   issues: write
 jobs:
   call-comments-workflow:
-    uses: bitnami/support/.github/workflows/comments.yml@main
+    uses: bitnami/support/.github/workflows/comment-created.yml@main
     secrets: inherit

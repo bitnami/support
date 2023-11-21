@@ -14,5 +14,5 @@ permissions:
   issues: write
 jobs:
   call-reasign-workflow:
-    uses: bitnami/support/.github/workflows/reasign.yml@main
+    uses: bitnami/support/.github/workflows/item-labeled.yml@main
     secrets: inherit

@@ -14,5 +14,5 @@ permissions:
   pull-requests: write
 jobs:
   call-move-closed-workflow:
-    uses: bitnami/support/.github/workflows/move-closed-issues.yml@main
+    uses: bitnami/support/.github/workflows/item-closed.yml@main
     secrets: inherit

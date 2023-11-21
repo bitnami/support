@@ -1,4 +1,4 @@
 # https://github.com/marketplace/actions/repo-file-sync-action#%EF%B8%8F-sync-configuration
-bitnami/support-test@support-sync:
-  - source: workflows/support
+bitnami/support-tes:
+  - source: workflows/
     dest: .github/workflows/

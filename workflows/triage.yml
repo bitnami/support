@@ -18,5 +18,5 @@ permissions:
   issues: write
 jobs:
   call-triage-workflow:
-    uses: bitnami/support/.github/workflows/triage.yml@main
+    uses: bitnami/support/.github/workflows/item-opened.yml@main
     secrets: inherit
