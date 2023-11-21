@@ -15,7 +15,7 @@ jobs:
   call-migration-workflow:
     uses: bitnami/support/.github/workflows/migrate-reusable.yml@main
     with:
-      org: bitnami
+      organization: bitnami
       legacy_project_board_name: Support
       new_project_number: 4
       repo: ${{ github.event.repository.name }}
@@ -24,12 +24,12 @@ jobs:
       token: GITHUB_TOKEN
 ```
 
-### About the process
+### How it works
 
 The hard work is done by this [piece of code](.github/scripts/migrate.sh) but in general lines the proccess is easy:
 
 1. Retrieve information about projects.
-2. Loop over each project (classic) column.
+2. Loop over each Project (classic) column.
 3. Get the cards from each column.
 4. Create new cards in the new Project.
 5. Move each new card to the right column.
