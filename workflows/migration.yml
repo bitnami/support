@@ -13,4 +13,4 @@ jobs:
       repo: ${{ github.event.repository.name }}
     secrets:
       # This token should have access to both projects and at least read:project permissions
-      token: ${{ secrets.BITNAMI_BOT_TOKEN }}
+      token: ${{ secrets.MIGRATION_TOKEN }}
