@@ -25,7 +25,7 @@ jobs:
       - name: Updating members of the Bitnami team
         env:
           # only available to authenticated members of the team's organization. OAuth access tokens require the read:org scope
-          TOKEN: ${{ secrets.BITNAMI_BOT_TOKEN }}
+          TOKEN: ${{ secrets.BITNAMI_BOT_SUPPORT_TOKEN}}
         run: |
           TEAM_MEMBERS=$(curl --request GET \
           --url https://api.github.com/orgs/bitnami/teams/developers/members?per_page=100 \

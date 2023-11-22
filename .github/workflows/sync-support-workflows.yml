@@ -18,6 +18,6 @@ jobs:
         uses: BetaHuhn/repo-file-sync-action@3023dac7ce66c18b119e2012348437eadeaea116
         with:
           # This token requires workflows permissions.
-          GH_PAT: ${{ secrets.BITNAMI_BOT_TOKEN }}
+          GH_PAT: ${{ secrets.BITNAMI_BOT_SUPPORT_TOKEN }}
           PR_LABELS: support
           COMMIT_BODY: "Signed-off-by: bitnami-bot@vmware.com"
