@@ -1,0 +1,95 @@
+# Copyright VMware, Inc.
+# SPDX-License-Identifier: APACHE-2.0
+
+name: '[Support] Comments based card movements'
+on:
+  workflow_call:
+    secrets:
+      BITNAMI_BOT_TOKEN:
+        required: true
+# Remove all permissions by default
+permissions: {}
+# Avoid concurrency over the same issue
+concurrency:
+  group: card-movement-${{ github.event.issue.number }}
+jobs:
+  comments_handler:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Repo checkout
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
+        with:
+          # TODO: Token required because bitnami/support is private and GITHUB_TOKEN doesn't have access.
+          token: "${{ secrets.BITNAMI_BOT_TOKEN }}"
+          fetch-depth: 1
+          repository: bitnami/support
+      - name: Load .env file
+        uses: xom9ikk/dotenv@de1ff27d319507880e6621e4d47424c677d95f68
+      - name: Move into From Build Maintenance
+        uses: EndBug/project-fields@47306ad805cdba6fc5bb9e698b9d0c81c366c629
+        # The comment was created by bitnami-bot in a pull_request created by bitnami-bot
+        if: ${{ github.actor == 'bitnami-bot' && github.event.issue.user.login == 'bitnami-bot' && github.event.issue.pull_request != null }}
+        with:
+          project_url: https://github.com/orgs/bitnami/projects/4
+          github_token: ${{ secrets.BITNAMI_BOT_TOKEN }}
+          operation: set
+          fields: Status
+          values: Build Maintenance
+      - name: Move into Pending
+        uses: EndBug/project-fields@47306ad805cdba6fc5bb9e698b9d0c81c366c629
+        if: |
+          (github.actor != 'bitnami-bot' || github.event.issue.user.login != 'bitnami-bot' || github.event.issue.pull_request == null) &&
+          contains(fromJson(env.BITNAMI_TEAM), github.actor) &&
+          (!contains(github.event.issue.labels.*.name, 'bitnami'))
+        with:
+          project_url: https://github.com/orgs/bitnami/projects/4
+          github_token: ${{ secrets.BITNAMI_BOT_TOKEN }}
+          operation: set
+          fields: Status
+          values: Pending
+      - name: Move into In Progress
+        uses: EndBug/project-fields@47306ad805cdba6fc5bb9e698b9d0c81c366c629
+        if: |
+          (github.actor != 'bitnami-bot' || github.event.issue.user.login != 'bitnami-bot' || github.event.issue.pull_request == null) &&
+          (!contains(fromJson(env.BITNAMI_TEAM), github.actor)) &&
+          contains(github.event.issue.labels.*.name, 'in-progress')
+        with:
+          project_url: https://github.com/orgs/bitnami/projects/4
+          github_token: ${{ secrets.BITNAMI_BOT_TOKEN }}
+          operation: set
+          fields: Status
+          values: In progress
+      - name: Move into Triage
+        uses: EndBug/project-fields@47306ad805cdba6fc5bb9e698b9d0c81c366c629
+        if: |
+          (github.actor != 'bitnami-bot' || github.event.issue.user.login != 'bitnami-bot' || github.event.issue.pull_request == null) &&
+          (!contains(fromJson(env.BITNAMI_TEAM), github.actor)) &&
+          (!contains(github.event.issue.labels.*.name, 'in-progress'))
+        with:
+          project_url: https://github.com/orgs/bitnami/projects/4
+          github_token: ${{ secrets.BITNAMI_BOT_TOKEN }}
+          operation: set
+          fields: Status
+          values: Triage
+  labeling:
+    name: Set labels
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      issues: write
+    steps:
+      - name: Get item info
+        id: get-item
+        run: |
+          author="${{ github.event.issue != null && github.event.issue.user.login || github.event.pull_request.user.login }}"
+          number="${{ github.event.issue != null && github.event.issue.number || github.event.pull_request.number }}"
+          type="${{ github.event.issue != null && 'issue' || 'pull_request' }}"
+          echo "author=${author}" >> $GITHUB_OUTPUT
+          echo "number=${number}" >> $GITHUB_OUTPUT
+          echo "type=${type}" >> $GITHUB_OUTPUT
+      - name: Build Maintenance labeling
+        uses: fmulero/labeler@f49bf680252fc8ac12cbebb6e0ed8ea19d0712da
+        if: ${{ steps.get-item.outputs.type == 'pull_request' && steps.get-item.outputs.author == 'bitnami-bot' }}
+        with:
+          add-labels: review-required
+          remove-labels: auto-merge

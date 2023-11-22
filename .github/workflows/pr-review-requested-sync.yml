@@ -1,0 +1,43 @@
+# Copyright VMware, Inc.
+# SPDX-License-Identifier: APACHE-2.0
+
+name: '[Support] Review based card movements'
+on:
+  workflow_call:
+    secrets:
+      BITNAMI_BOT_TOKEN:
+        required: true
+# Remove all permissions by default
+permissions: {}
+concurrency:
+  group: card-movement-${{ github.event.number }}
+jobs:
+  handler:
+    runs-on: ubuntu-latest
+    # This job will ignore:
+    # * Events triggered by bitnami-bot (README commits for example).
+    # * Events triggered over automated PRs (They are managed in comments.yml workflow).
+    # * PRs with 'bitnami' label.
+    if: |
+      github.actor != 'bitnami-bot' && github.event.pull_request.user.login != 'bitnami-bot' &&
+      (!contains(github.event.pull_request.labels.*.name, 'bitnami')) && (!contains(github.event.pull_request.labels.*.name, 'triage'))
+    steps:
+      - name: Repo checkout
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
+        with:
+          # TODO: Token required because bitnami/support is private and GITHUB_TOKEN doesn't have access.
+          token: "${{ secrets.BITNAMI_BOT_TOKEN }}"
+          fetch-depth: 1
+          repository: bitnami/support
+      - name: Load .env file
+        uses: xom9ikk/dotenv@de1ff27d319507880e6621e4d47424c677d95f68
+      - name: Move into In Progress
+        # Move the card only if the actor is not a Bitnami member
+        if: ${{ !contains(fromJson(env.BITNAMI_TEAM), github.actor) }}
+        uses: EndBug/project-fields@47306ad805cdba6fc5bb9e698b9d0c81c366c629
+        with:
+          project_url: https://github.com/orgs/bitnami/projects/4
+          github_token: ${{ secrets.BITNAMI_BOT_TOKEN }}
+          operation: set
+          fields: Status
+          values: In progress
