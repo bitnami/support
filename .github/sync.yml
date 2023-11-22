@@ -6,13 +6,14 @@
 bitnami/support-test:
   - source: workflows/
     dest: .github/workflows/
-# Uncoment once migrated
+bitnami/vms:
+  - source: workflows/
+    dest: .github/workflows/
+# Uncoment for migration
 # bitnami/charts:
 #   - source: workflows/
 #     dest: .github/workflows/
 # bitnami/containers:
 #   - source: workflows/
 #     dest: .github/workflows/
-# bitnami/vms:
-#   - source: workflows/
-#     dest: .github/workflows/
+# 
