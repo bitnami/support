@@ -12,7 +12,7 @@ set -o pipefail
 echo "::group::Parsing inputs"
 organization="$1"
 echo "organization=${organization}"
-legacy_project_board_name="$1"
+legacy_project_board_name="$2"
 echo "legacy_project_board_name=${legacy_project_board_name}"
 new_project_number="$3"
 echo "new_project_number=${new_project_number}"
