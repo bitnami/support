@@ -1,0 +1,23 @@
+# Copyright VMware, Inc.
+# SPDX-License-Identifier: APACHE-2.0
+
+name: Sync Workflow Files
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+permissions: {}
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
+      - name: Run GitHub File Sync
+        uses: BetaHuhn/repo-file-sync-action@3023dac7ce66c18b119e2012348437eadeaea116
+        with:
+          # This token requires workflows permissions.
+          GH_PAT: ${{ secrets.BITNAMI_BOT_SUPPORT_TOKEN }}
+          PR_LABELS: support
+          COMMIT_BODY: "Signed-off-by: bitnami-bot@vmware.com"
