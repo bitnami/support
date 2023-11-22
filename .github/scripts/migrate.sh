@@ -82,7 +82,6 @@ while read -r legacy_project_board_column_id; do
   while read -r legacy_project_board_card_id; do
     echo "legacy_project_board_card_id=${legacy_project_board_card_id}"
     legacy_project_board_card="$(jq -r 'map(select(.id == $legacy_project_board_card_id)) | .[0]' --argjson legacy_project_board_card_id "${legacy_project_board_card_id}" <<< "$legacy_project_board_cards")"
-    echo "legacy_project_board_card=$(jq '.id' <<< "${legacy_project_board_card}")"
     legacy_project_board_card_content_url="$(jq -r '.content_url // ""' <<< "${legacy_project_board_card}")"
     echo "legacy_project_board_card_content_url=${legacy_project_board_card_content_url}"
 
