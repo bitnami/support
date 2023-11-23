@@ -1,0 +1,44 @@
+# Copyright VMware, Inc.
+# SPDX-License-Identifier: APACHE-2.0
+#
+# Based on: https://github.com/pl-strflt/projects-migration/tree/main
+name: Migrate Projects (reusable)
+
+on:
+  workflow_call:
+    inputs:
+      organization:
+        description: Organization 
+        required: true
+        type: string
+      legacy_project_board_name:
+        description: The name of the legacy project (classic) board
+        required: true
+        type: string
+      new_project_number:
+        description: Number of the new Project
+        required: true
+        type: number
+      repo:
+        description: The name of the repository to which the legacy project (classic) belongs
+        required: true
+        type: string
+    secrets:
+      token:
+        description: GITHUB_TOKEN
+        required: true
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    name: Migrate legacy project board to new project
+    env:
+      GITHUB_TOKEN: ${{ secrets.token }}
+    steps:
+      - name: Repo checkout
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
+        with:
+          fetch-depth: 1
+          repository: bitnami/support
+      - run: ./.github/scripts/migrate.sh '${{ inputs.organization }}' '${{ inputs.legacy_project_board_name }}' '${{ inputs.new_project_number }}' '${{ inputs.repo }}'
+        shell: bash
