@@ -40,5 +40,6 @@ jobs:
         with:
           fetch-depth: 1
           repository: bitnami/support
+          token: ${{ secrets.token }}
       - run: ./.github/scripts/migrate.sh '${{ inputs.organization }}' '${{ inputs.legacy_project_board_name }}' '${{ inputs.new_project_number }}' '${{ inputs.repo }}'
         shell: bash

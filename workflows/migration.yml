@@ -3,6 +3,7 @@
 
 name: '[Support] Cards migration'
 on: [ workflow_dispatch ]
+permissions: {}
 jobs:
   call-migration-workflow:
     uses: bitnami/support/.github/workflows/migrate-reusable.yml@main
