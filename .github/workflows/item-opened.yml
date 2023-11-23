@@ -25,8 +25,6 @@ jobs:
       - name: Repo checkout
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
         with:
-          # TODO: Token required because bitnami/support is private and GITHUB_TOKEN doesn't have access.
-          token: "${{ secrets.BITNAMI_BOT_TOKEN }}"
           fetch-depth: 1
           repository: bitnami/support
       - name: Load .env file
@@ -61,30 +59,37 @@ jobs:
     name: Set labels
     runs-on: ubuntu-latest
     permissions:
+      contents: read
       pull-requests: write
       issues: write
     steps:
       - name: Repo checkout
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
         with:
-          # TODO: Token required because bitnami/support is private and GITHUB_TOKEN doesn't have access.
-          token: "${{ secrets.BITNAMI_BOT_TOKEN }}"
           fetch-depth: 1
           repository: bitnami/support
       - name: Load .env file
         uses: xom9ikk/dotenv@de1ff27d319507880e6621e4d47424c677d95f68
       - name: Get item info
         id: get-item
+        env:
+          GITHUB_TOKEN: ${{ secrets.BITNAMI_BOT_TOKEN }}
         run: |
           author="${{ github.event.issue != null && github.event.issue.user.login || github.event.pull_request.user.login }}"
           number="${{ github.event.issue != null && github.event.issue.number || github.event.pull_request.number }}"
           type="${{ github.event.issue != null && 'issue' || 'pull_request' }}"
           repo_name="${{ github.event.repository.name }}"
           assignment=$(echo "$REPO_ASSIGNMENT" | jq -cr ".\"${repo_name}\" // .default")
+          assignment_team=$(echo "$assignment" | jq -cr ".\"triage-teams\" // empty")
+          assignees=$(echo "$assignment" | jq -cr ".\"triage-assignees\" // empty")
+          # If there is no assignees and the team is not empty
+          if [[ -n "$assignment_team" ]] && [[ -z "$assignees" ]]; then
+            assignees=$(gh api "/orgs/bitnami/teams/${assignment_team}/members" |jq 'sort_by(.login)|map(.login)|join(",")')
+          fi
           echo "author=${author}" >> $GITHUB_OUTPUT
           echo "number=${number}" >> $GITHUB_OUTPUT
           echo "type=${type}" >> $GITHUB_OUTPUT
-          echo "assignment=${assignment}" >> $GITHUB_OUTPUT
+          echo "assignees=${assignees}" >> $GITHUB_OUTPUT
       - name: From Bitnami labeling
         uses: fmulero/labeler@f49bf680252fc8ac12cbebb6e0ed8ea19d0712da
         if: ${{ steps.get-item.outputs.type != 'issue' && steps.get-item.outputs.author == 'bitnami-bot' }}
@@ -110,9 +115,6 @@ jobs:
         if: ${{ steps.get-item.outputs.author != 'bitnami-bot' }}
         with:
           numOfAssignee: 1
-          teams: ${{ fromJson(steps.get-item.outputs.assignment).triage-teams }}
-          assignees: ${{ fromJson(steps.get-item.outputs.assignment).triage-assignees }}
-          # Required to retrieve team members
-          repo-token: ${{ secrets.BITNAMI_BOT_TOKEN }}
+          assignees: ${{ steps.get-item.outputs.assignees }}
           # If we have repos with only one assignees we allow selfAssignment
-          allowSelfAssign: ${{ fromJson(steps.get-item.outputs.assignment).triage-assignees == steps.get-item.outputs.author }}
+          allowSelfAssign: ${{ steps.get-item.outputs.assignees == steps.get-item.outputs.author }}
