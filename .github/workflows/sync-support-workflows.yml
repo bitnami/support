@@ -22,4 +22,4 @@ jobs:
           # This token requires workflows permissions.
           GH_PAT: ${{ secrets.BITNAMI_BOT_SUPPORT_TOKEN }}
           PR_LABELS: support
-          COMMIT_BODY: "Signed-off-by: bitnami-bot@vmware.com"
+          COMMIT_BODY: "Signed-off-by: bitnami-bot <bitnami-bot@vmware.com>"
