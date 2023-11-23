@@ -71,11 +71,21 @@ jobs:
       github.event.action == 'labeled' && github.actor != 'bitnami-bot' &&
       contains(fromJson(needs.get-info.outputs.label-keys),github.event.label.name)
     steps:
-      - name: Assign issue/PR
+      - name: Assign in-progress issue/PR
         uses: pozil/auto-assign-issue@edee9537367a8fbc625d27f9e10aa8bad47b8723
-        if: ${{ github.event.label.name == 'in-progress' || github.event.label.name == 'triage' }}
+        if: ${{ github.event.label.name == 'in-progress' }}
         with:
-          removePreviousAssignees: ${{ github.event.label.name == 'in-progress' }}
+          removePreviousAssignees: true
+          teams: ${{ fromJson(needs.get-info.outputs.assignment).support-teams }}
+          assignees: ${{ fromJson(needs.get-info.outputs.assignment).support-assignees }}
+          # Required to retrieve team members
+          repo-token: ${{ secrets.BITNAMI_BOT_TOKEN }}
+          # If we have repos with only one assignees we allow selfAssignment
+          allowSelfAssign: ${{ fromJson(needs.get-info.outputs.assignment).support-assignees == needs.get-info.outputs.author }}
+      - name: Assign triage issue/PR
+        uses: pozil/auto-assign-issue@edee9537367a8fbc625d27f9e10aa8bad47b8723
+        if: ${{ github.event.label.name == 'triage' }}
+        with:
           teams: ${{ fromJson(needs.get-info.outputs.assignment).triage-teams }}
           assignees: ${{ fromJson(needs.get-info.outputs.assignment).triage-assignees }}
           # Required to retrieve team members

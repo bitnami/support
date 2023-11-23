@@ -46,7 +46,7 @@ The [`.env` file](.env) plays an important role here. It has the following infor
   },
   "default": {
     "triage-assignees": "fmulero",
-    "support-assginees": "fmulero"
+    "support-assignees": "fmulero"
   }
 }
 ```
