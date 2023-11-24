@@ -17,32 +17,41 @@ jobs:
   get-info:
     name: Get labels info
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     outputs:
       label-mapping: ${{ steps.get-info.outputs.label-mapping }}
       label-keys: ${{ steps.get-info.outputs.label-keys }}
       author: ${{ steps.get-info.outputs.author }}
-      assignment: ${{ steps.get-info.outputs.assignment }}
+      assignees: ${{ steps.get-info.outputs.assignees }}
     steps:
       - name: Repo checkout
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
         with:
-          # TODO: Token required because bitnami/support is private and GITHUB_TOKEN doesn't have access.
-          token: "${{ secrets.BITNAMI_BOT_TOKEN }}"
           fetch-depth: 1
           repository: bitnami/support
       - name: Load .env file
         uses: xom9ikk/dotenv@de1ff27d319507880e6621e4d47424c677d95f68
       - id: get-info
         name: Get label mapping
+        env:
+          GITHUB_TOKEN: ${{ secrets.BITNAMI_BOT_TOKEN }}
         run: |
           author="${{ github.event.issue != null && github.event.issue.user.login || github.event.pull_request.user.login }}"
           repo_name="${{ github.event.repository.name }}"
+          group="${{github.event.label.name == 'triage' && 'triage' || 'support' }}"
           assignment=$(echo "$REPO_ASSIGNMENT" | jq -cr ".\"${repo_name}\" // .default")
+          assignment_team=$(echo "$assignment" | jq -cr ".\"${group}-teams\" // empty")
+          assignees=$(echo "$assignment" | jq -cr ".\"${group}-assignees\" // empty")
+          # If there is no assignees and the team is not empty
+          if [[ -n "$assignment_team" ]] && [[ -z "$assignees" ]]; then
+            assignees=$(gh api "/orgs/bitnami/teams/${assignment_team}/members" |jq 'sort_by(.login)|map(.login)|join(",")')
+          fi
           label_keys=$(echo "$LABEL_MAPPING"| jq -cr 'keys')
           echo "author=${author}" >> $GITHUB_OUTPUT
           echo "label-keys=${label_keys}" >> $GITHUB_OUTPUT
           echo "label-mapping=${LABEL_MAPPING}" >> $GITHUB_OUTPUT
-          echo "assignment=${assignment}" >> $GITHUB_OUTPUT
+          echo "assignees=${assignees}" >> $GITHUB_OUTPUT
   # For any opened or reopened issue, should be sent into Triage
   send_to_board:
     name: Move card
@@ -71,27 +80,13 @@ jobs:
       github.event.action == 'labeled' && github.actor != 'bitnami-bot' &&
       contains(fromJson(needs.get-info.outputs.label-keys),github.event.label.name)
     steps:
-      - name: Assign in-progress issue/PR
+      - name: Assign issue/PR
         uses: pozil/auto-assign-issue@edee9537367a8fbc625d27f9e10aa8bad47b8723
-        if: ${{ github.event.label.name == 'in-progress' }}
         with:
-          removePreviousAssignees: true
-          teams: ${{ fromJson(needs.get-info.outputs.assignment).support-teams }}
-          assignees: ${{ fromJson(needs.get-info.outputs.assignment).support-assignees }}
-          # Required to retrieve team members
-          repo-token: ${{ secrets.BITNAMI_BOT_TOKEN }}
+          removePreviousAssignees: ${{ github.event.label.name == 'in-progress' }}
+          assignees: ${{ needs.get-info.outputs.assignees }}
           # If we have repos with only one assignees we allow selfAssignment
-          allowSelfAssign: ${{ fromJson(needs.get-info.outputs.assignment).support-assignees == needs.get-info.outputs.author }}
-      - name: Assign triage issue/PR
-        uses: pozil/auto-assign-issue@edee9537367a8fbc625d27f9e10aa8bad47b8723
-        if: ${{ github.event.label.name == 'triage' }}
-        with:
-          teams: ${{ fromJson(needs.get-info.outputs.assignment).triage-teams }}
-          assignees: ${{ fromJson(needs.get-info.outputs.assignment).triage-assignees }}
-          # Required to retrieve team members
-          repo-token: ${{ secrets.BITNAMI_BOT_TOKEN }}
-          # If we have repos with only one assignees we allow selfAssignment
-          allowSelfAssign: ${{ fromJson(needs.get-info.outputs.assignment).triage-assignees == needs.get-info.outputs.author }}
+          allowSelfAssign: ${{ needs.get-info.outputs.assignees == needs.get-info.outputs.author }}
   remove-labels:
     name: Remove previous labels
     runs-on: ubuntu-latest

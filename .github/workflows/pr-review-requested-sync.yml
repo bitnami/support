@@ -13,6 +13,8 @@ concurrency:
   group: card-movement-${{ github.event.number }}
 jobs:
   handler:
+    permissions:
+      contents: read
     runs-on: ubuntu-latest
     # This job will ignore:
     # * Events triggered by bitnami-bot (README commits for example).
@@ -25,8 +27,6 @@ jobs:
       - name: Repo checkout
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
         with:
-          # TODO: Token required because bitnami/support is private and GITHUB_TOKEN doesn't have access.
-          token: "${{ secrets.BITNAMI_BOT_TOKEN }}"
           fetch-depth: 1
           repository: bitnami/support
       - name: Load .env file
