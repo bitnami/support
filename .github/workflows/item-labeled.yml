@@ -25,6 +25,8 @@ jobs:
       author: ${{ steps.get-info.outputs.author }}
       assignees: ${{ steps.get-info.outputs.assignees }}
     steps:
+      - name: Debug
+        uses: hmarr/debug-action@v2
       - name: Repo checkout
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
         with:
