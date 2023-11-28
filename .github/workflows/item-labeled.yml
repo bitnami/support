@@ -61,6 +61,13 @@ jobs:
       github.event.action == 'labeled' && github.actor != 'bitnami-bot' &&
       contains(fromJson(needs.get-info.outputs.label-keys),github.event.label.name)
     steps:
+      - name: Add to board
+        id: add-to-project
+        uses: actions/add-to-project@0be3b6580ae2145e72e0ada85d693ab71a5f17d6
+        with:
+          # Support project
+          project-url: https://github.com/orgs/bitnami/projects/4
+          github-token: ${{ secrets.BITNAMI_BOT_TOKEN }}
       - name: Add to column
         uses: EndBug/project-fields@47306ad805cdba6fc5bb9e698b9d0c81c366c629
         with:
