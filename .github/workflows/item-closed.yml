@@ -11,7 +11,7 @@ on:
 permissions: {}
 # Avoid concurrency over the same issue
 concurrency:
-  group: card-movement-${{ github.event.issue != null && github.event.issue.number || github.event.number  }}
+  group: card-movement-${{ github.event.repository.id }}-${{ github.event.issue != null && github.event.issue.number || github.event.number }}
 jobs:
   send_to_solved:
     runs-on: ubuntu-latest
