@@ -14,17 +14,54 @@ permissions: {}
 concurrency:
   group: card-movement-${{ github.event.repository.id }}-${{ github.event.issue != null && github.event.issue.number || github.event.number }}
 jobs:
-  get-info:
-    name: Get item info
+  # For any opened or reopened issue, should be sent into Triage
+  send_to_board:
+    name: Organize triage
+    runs-on: ubuntu-latest
+    # Please note that projects cards are created/moved with Bitnami Bot
+    permissions:
+      contents: read
+    steps:
+      - name: Repo checkout
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
+        with:
+          fetch-depth: 1
+          repository: bitnami/support
+      - name: Load .env file
+        uses: xom9ikk/dotenv@de1ff27d319507880e6621e4d47424c677d95f68
+      - name: Get item info
+        id: get-item
+        run: |
+          author="${{ github.event.issue != null && github.event.issue.user.login || github.event.pull_request.user.login }}"
+          number="${{ github.event.issue != null && github.event.issue.number || github.event.pull_request.number }}"
+          type="${{ github.event.issue != null && 'issue' || 'pull_request' }}"
+          echo "author=${author}" >> $GITHUB_OUTPUT
+          echo "number=${number}" >> $GITHUB_OUTPUT
+          echo "type=${type}" >> $GITHUB_OUTPUT
+      - name: Add to board
+        id: add-to-project
+        uses: actions/add-to-project@0be3b6580ae2145e72e0ada85d693ab71a5f17d6
+        if: ${{steps.get-item.outputs.author != 'bitnami-bot' || steps.get-item.outputs.type != 'pull_request'}}
+        with:
+          # Support project
+          project-url: https://github.com/orgs/bitnami/projects/4
+          github-token: ${{ secrets.BITNAMI_BOT_TOKEN }}
+      - name: Add to column
+        uses: EndBug/project-fields@47306ad805cdba6fc5bb9e698b9d0c81c366c629
+        if: ${{steps.get-item.outputs.author != 'bitnami-bot' || steps.get-item.outputs.type != 'pull_request'}}
+        with:
+          project_url: https://github.com/orgs/bitnami/projects/4
+          github_token: ${{ secrets.BITNAMI_BOT_TOKEN }}
+          operation: set
+          fields: Status
+          values: ${{ (contains(fromJson(env.BITNAMI_TEAM), steps.get-item.outputs.author)) && 'From Bitnami' || 'Triage' }}
+  labeling:
+    name: Set labels
     runs-on: ubuntu-latest
     permissions:
       contents: read
-    outputs:
-      author: ${{ steps.get-item.outputs.author }}
-      number: ${{ steps.get-item.outputs.number }}
-      type: ${{ steps.get-item.outputs.type }}
-      assignees: ${{ steps.get-item.outputs.assignees }}
-      bitnami_members: ${{ steps.get-item.outputs.bitnami_members }}
+      pull-requests: write
+      issues: write
     steps:
       - name: Repo checkout
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
@@ -53,47 +90,14 @@ jobs:
           echo "number=${number}" >> $GITHUB_OUTPUT
           echo "type=${type}" >> $GITHUB_OUTPUT
           echo "assignees=${assignees}" >> $GITHUB_OUTPUT
-          echo "bitnami_members=${BITNAMI_TEAM}" >> $GITHUB_OUTPUT
-  # For any opened or reopened issue, should be sent into Triage
-  send_to_board:
-    name: Organize triage
-    runs-on: ubuntu-latest
-    needs: get-info
-    # Please note that projects cards are created/moved with Bitnami Bot
-    steps:
-      - name: Add to board
-        id: add-to-project
-        uses: actions/add-to-project@0be3b6580ae2145e72e0ada85d693ab71a5f17d6
-        if: ${{ needs.get-info.outputs.author != 'bitnami-bot' || needs.get-info.outputs.type != 'pull_request'}}
-        with:
-          # Support project
-          project-url: https://github.com/orgs/bitnami/projects/4
-          github-token: ${{ secrets.BITNAMI_BOT_TOKEN }}
-      - name: Add to column
-        uses: EndBug/project-fields@47306ad805cdba6fc5bb9e698b9d0c81c366c629
-        if: ${{ needs.get-info.outputs.author != 'bitnami-bot' || needs.get-info.outputs.type != 'pull_request'}}
-        with:
-          project_url: https://github.com/orgs/bitnami/projects/4
-          github_token: ${{ secrets.BITNAMI_BOT_TOKEN }}
-          operation: set
-          fields: Status
-          values: ${{ (contains(fromJson(needs.get-info.outputs.bitnami_members), needs.get-info.outputs.author)) && 'From Bitnami' || 'Triage' }}
-  labeling:
-    name: Set labels
-    runs-on: ubuntu-latest
-    needs: get-info
-    permissions:
-      pull-requests: write
-      issues: write
-    steps:
       - name: From Bitnami labeling
         uses: fmulero/labeler@f49bf680252fc8ac12cbebb6e0ed8ea19d0712da
-        if: ${{ needs.get-info.outputs.type != 'issue' && needs.get-info.outputs.author == 'bitnami-bot' }}
+        if: ${{ steps.get-item.outputs.type != 'issue' && steps.get-item.outputs.author == 'bitnami-bot' }}
         with:
           add-labels: 'automated, auto-merge'
       - name: Verify labeling
         uses: fmulero/labeler@f49bf680252fc8ac12cbebb6e0ed8ea19d0712da
-        if: ${{ needs.get-info.outputs.type != 'issue' && contains(fromJson(needs.get-info.outputs.bitnami_members), needs.get-info.outputs.author) }}
+        if: ${{ steps.get-item.outputs.type != 'issue' && contains(fromJson(env.BITNAMI_TEAM), steps.get-item.outputs.author) }}
         with:
           # Bitnami bot token is required to trigger CI workflows
           repo-token: ${{ secrets.BITNAMI_BOT_TOKEN }}
@@ -101,34 +105,16 @@ jobs:
       - name: Triage labeling
         uses: fmulero/labeler@f49bf680252fc8ac12cbebb6e0ed8ea19d0712da
         if: |
-          needs.get-info.outputs.type != 'issue' && needs.get-info.outputs.author != 'bitnami-bot' ||
-          needs.get-info.outputs.type == 'issue'
+          steps.get-item.outputs.type != 'issue' && steps.get-item.outputs.author != 'bitnami-bot' ||
+          steps.get-item.outputs.type == 'issue'
         with:
-          add-labels: ${{ (contains(fromJson(needs.get-info.outputs.bitnami_members), needs.get-info.outputs.author)) && 'bitnami' || 'triage' }}
-          remove-labels: on-hold, in-progress, solved, ${{ (contains(fromJson(needs.get-info.outputs.bitnami_members), needs.get-info.outputs.author)) && 'triage' || 'bitnami' }}
+          add-labels: ${{ (contains(fromJson(env.BITNAMI_TEAM), steps.get-item.outputs.author)) && 'bitnami' || 'triage' }}
+          remove-labels: on-hold, in-progress, solved, ${{ (contains(fromJson(env.BITNAMI_TEAM), steps.get-item.outputs.author)) && 'triage' || 'bitnami' }}
       - name: 
         uses: pozil/auto-assign-issue@edee9537367a8fbc625d27f9e10aa8bad47b8723
-        if: ${{ needs.get-info.outputs.author != 'bitnami-bot' }}
+        if: ${{ steps.get-item.outputs.author != 'bitnami-bot' }}
         with:
           numOfAssignee: 1
-          assignees: ${{ needs.get-info.outputs.assignees }}
+          assignees: ${{ steps.get-item.outputs.assignees }}
           # If we have repos with only one assignees we allow selfAssignment
-          allowSelfAssign: ${{ needs.get-info.outputs.assignees == needs.get-info.outputs.author }}
-  assign:
-    name: Assign new issue/PR
-    runs-on: ubuntu-latest
-    needs: get-info
-    permissions:
-      pull-requests: write
-      issues: write
-    if : |
-      github.event.action == 'labeled' && github.actor != 'bitnami-bot' &&
-      contains(fromJson(needs.get-info.outputs.label-keys),github.event.label.name)
-    steps:
-      - name: Assign issue/PR
-        uses: pozil/auto-assign-issue@edee9537367a8fbc625d27f9e10aa8bad47b8723
-        with:
-          removePreviousAssignees: ${{ github.event.label.name == 'in-progress' }}
-          assignees: ${{ needs.get-info.outputs.assignees }}
-          # If we have repos with only one assignee we allow selfAssignment
-          allowSelfAssign: ${{ needs.get-info.outputs.assignees == needs.get-info.outputs.author }}
+          allowSelfAssign: ${{ steps.get-item.outputs.assignees == steps.get-item.outputs.author }}
