@@ -27,6 +27,10 @@ jobs:
     steps:
       - name: Debug
         uses: hmarr/debug-action@v2
+      - name: Debug
+        run: |
+          echo "::warning:: card-movement-${{ github.event_name != 'issues' && github.event.number || github.event.issue.number }}"
+
       - name: Repo checkout
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
         with:
