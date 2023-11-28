@@ -28,6 +28,25 @@ jobs:
           echo "author=${author}" >> $GITHUB_OUTPUT
           echo "number=${number}" >> $GITHUB_OUTPUT
           echo "type=${type}" >> $GITHUB_OUTPUT
+      - name: Solved labeling
+        # Only if moved into Solved and the issue author is not bitnami-bot
+        if: ${{ steps.get-item.outputs.author != 'bitnami-bot' }}
+        uses: fmulero/labeler@f49bf680252fc8ac12cbebb6e0ed8ea19d0712da
+        with:
+          add-labels: solved
+          # Triage is not on the list to know how many issues/PRs are solved
+          # directly on triage
+          remove-labels: in-progress, on-hold
+      - name: Add to board
+        id: add-to-project
+        uses: actions/add-to-project@0be3b6580ae2145e72e0ada85d693ab71a5f17d6
+        if: |
+          steps.get-item.outputs.author != 'bitnami-bot' ||
+          (steps.get-item.outputs.author == 'bitnami-bot' && contains(github.event.pull_request.labels.*.name, 'review-required'))
+        with:
+          # Support project
+          project-url: https://github.com/orgs/bitnami/projects/4
+          github-token: ${{ secrets.BITNAMI_BOT_TOKEN }}
       - name: Send to the Solved column
         id: send-solved
         uses: EndBug/project-fields@47306ad805cdba6fc5bb9e698b9d0c81c366c629
@@ -41,12 +60,3 @@ jobs:
           operation: set
           fields: Status
           values: Solved
-      - name: Solved labeling
-        # Only if moved into Solved and the issue author is not bitnami-bot
-        if: ${{ steps.get-item.outputs.author != 'bitnami-bot' }}
-        uses: fmulero/labeler@f49bf680252fc8ac12cbebb6e0ed8ea19d0712da
-        with:
-          add-labels: solved
-          # Triage is not on the list to know how many issues/PRs are solved
-          # directly on triage
-          remove-labels: in-progress, on-hold
