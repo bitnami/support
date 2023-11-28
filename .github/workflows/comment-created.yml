@@ -11,7 +11,7 @@ on:
 permissions: {}
 # Avoid concurrency over the same issue
 concurrency:
-  group: card-movement-${{ github.event.issue.number }}
+  group: card-movement-${{ github.event.repository.id }}-${{ github.event.issue.number }}
 jobs:
   comments_handler:
     runs-on: ubuntu-latest

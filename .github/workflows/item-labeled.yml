@@ -12,7 +12,7 @@ on:
 permissions: {}
 # Avoid concurrency over the same issue
 concurrency:
-  group: card-movement-${{ github.event_name != 'issues' && github.event.number || github.event.issue.number }}
+  group: card-movement-${{ github.event.repository.id }}-${{ github.event.issue != null && github.event.number || github.event.issue.number }}
 jobs:
   get-info:
     name: Get labels info
@@ -25,12 +25,6 @@ jobs:
       author: ${{ steps.get-info.outputs.author }}
       assignees: ${{ steps.get-info.outputs.assignees }}
     steps:
-      - name: Debug
-        uses: hmarr/debug-action@v2
-      - name: Debug
-        run: |
-          echo "::warning:: card-movement-${{ github.event_name != 'issues' && github.event.number || github.event.issue.number }}"
-
       - name: Repo checkout
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
         with:
