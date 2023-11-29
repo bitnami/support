@@ -15,7 +15,7 @@ bitnami/vulndb:
 bitnami/readme-generator-for-helm:
   - source: workflows/
     dest: .github/workflows/
-bitnami/chart-docs:
+bitnami/charts-docs:
   - source: workflows/
     dest: .github/workflows/
 bitnami/minideb:
