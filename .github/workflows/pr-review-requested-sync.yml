@@ -9,8 +9,6 @@ on:
         required: true
 # Remove all permissions by default
 permissions: {}
-concurrency:
-  group: card-movement-${{ github.event.repository.id }}-${{ github.event.number }}
 jobs:
   handler:
     permissions:
