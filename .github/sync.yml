@@ -9,6 +9,12 @@ bitnami/support-test:
 bitnami/vms:
   - source: workflows/
     dest: .github/workflows/
+bitnami/vulndb:
+  - source: workflows/
+    dest: .github/workflows/
+bitnami/readme-generator-for-helm:
+  - source: workflows/
+    dest: .github/workflows/
 # Uncoment for migration
 # bitnami/charts:
 #   - source: workflows/
