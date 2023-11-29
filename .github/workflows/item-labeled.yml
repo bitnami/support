@@ -10,9 +10,6 @@ on:
         required: true
 # Remove all permissions by default
 permissions: {}
-# Avoid concurrency over the same issue
-concurrency:
-  group: card-movement-${{ github.event.repository.id }}-${{ github.event.issue != null && github.event.issue.number || github.event.number }}
 jobs:
   get-info:
     name: Get labels info
@@ -45,7 +42,7 @@ jobs:
           assignees=$(echo "$assignment" | jq -cr ".\"${group}-assignees\" // empty")
           # If there is no assignees and the team is not empty
           if [[ -n "$assignment_team" ]] && [[ -z "$assignees" ]]; then
-            assignees=$(gh api "/orgs/bitnami/teams/${assignment_team}/members" |jq 'sort_by(.login)|map(.login)|join(",")')
+            assignees=$(gh api "/orgs/bitnami/teams/${assignment_team}/members" |jq -cr 'sort_by(.login)|map(.login)|join(",")')
           fi
           label_keys=$(echo "$LABEL_MAPPING"| jq -cr 'keys')
           echo "author=${author}" >> $GITHUB_OUTPUT
