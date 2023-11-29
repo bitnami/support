@@ -15,6 +15,36 @@ bitnami/vulndb:
 bitnami/readme-generator-for-helm:
   - source: workflows/
     dest: .github/workflows/
+bitnami/chart-docs:
+  - source: workflows/
+    dest: .github/workflows/
+bitnami/minideb:
+  - source: workflows/
+    dest: .github/workflows/
+bitnami/chart-categories-action:
+  - source: workflows/
+    dest: .github/workflows/
+bitnami/wait-for-port:
+  - source: workflows/
+    dest: .github/workflows/
+bitnami/render-template:
+  - source: workflows/
+    dest: .github/workflows/
+bitnami/ini-file:
+  - source: workflows/
+    dest: .github/workflows/
+bitnami/gonit:
+  - source: workflows/
+    dest: .github/workflows/
+bitnami/bndiagnostic:
+  - source: workflows/
+    dest: .github/workflows/
+bitnami/bncert:
+  - source: workflows/
+    dest: .github/workflows/
+bitnami/healthcheck-tools:
+  - source: workflows/
+    dest: .github/workflows/
 # Uncoment for migration
 # bitnami/charts:
 #   - source: workflows/
