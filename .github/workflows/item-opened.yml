@@ -84,7 +84,7 @@ jobs:
           assignees=$(echo "$assignment" | jq -cr ".\"triage-assignees\" // empty")
           # If there is no assignees and the team is not empty
           if [[ -n "$assignment_team" ]] && [[ -z "$assignees" ]]; then
-            assignees=$(gh api "/orgs/bitnami/teams/${assignment_team}/members" |jq 'sort_by(.login)|map(.login)|join(",")')
+            assignees=$(gh api "/orgs/bitnami/teams/${assignment_team}/members" |jq -cr 'sort_by(.login)|map(.login)|join(",")')
           fi
           echo "author=${author}" >> $GITHUB_OUTPUT
           echo "number=${number}" >> $GITHUB_OUTPUT
