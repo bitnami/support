@@ -5,7 +5,7 @@ name: '[Support] Comments based card movements'
 on:
   workflow_call:
     secrets:
-      BITNAMI_BOT_TOKEN:
+      BITNAMI_SUPPORT_BOARD_TOKEN:
         required: true
 # Remove all permissions by default
 permissions: {}
@@ -31,14 +31,14 @@ jobs:
         with:
           # Support project
           project-url: https://github.com/orgs/bitnami/projects/4
-          github-token: ${{ secrets.BITNAMI_BOT_TOKEN }}
+          github-token: ${{ secrets.BITNAMI_SUPPORT_BOARD_TOKEN }}
       - name: Move into From Build Maintenance
         uses: EndBug/project-fields@47306ad805cdba6fc5bb9e698b9d0c81c366c629
         # The comment was created by bitnami-bot in a pull_request created by bitnami-bot
         if: ${{ github.actor == 'bitnami-bot' && github.event.issue.user.login == 'bitnami-bot' && github.event.issue.pull_request != null }}
         with:
           project_url: https://github.com/orgs/bitnami/projects/4
-          github_token: ${{ secrets.BITNAMI_BOT_TOKEN }}
+          github_token: ${{ secrets.BITNAMI_SUPPORT_BOARD_TOKEN }}
           operation: set
           fields: Status
           values: Build Maintenance
@@ -50,7 +50,7 @@ jobs:
           (!contains(github.event.issue.labels.*.name, 'bitnami'))
         with:
           project_url: https://github.com/orgs/bitnami/projects/4
-          github_token: ${{ secrets.BITNAMI_BOT_TOKEN }}
+          github_token: ${{ secrets.BITNAMI_SUPPORT_BOARD_TOKEN }}
           operation: set
           fields: Status
           values: Pending
@@ -62,7 +62,7 @@ jobs:
           contains(github.event.issue.labels.*.name, 'in-progress')
         with:
           project_url: https://github.com/orgs/bitnami/projects/4
-          github_token: ${{ secrets.BITNAMI_BOT_TOKEN }}
+          github_token: ${{ secrets.BITNAMI_SUPPORT_BOARD_TOKEN }}
           operation: set
           fields: Status
           values: In progress
@@ -74,7 +74,7 @@ jobs:
           (!contains(github.event.issue.labels.*.name, 'in-progress'))
         with:
           project_url: https://github.com/orgs/bitnami/projects/4
-          github_token: ${{ secrets.BITNAMI_BOT_TOKEN }}
+          github_token: ${{ secrets.BITNAMI_SUPPORT_BOARD_TOKEN }}
           operation: set
           fields: Status
           values: Triage
