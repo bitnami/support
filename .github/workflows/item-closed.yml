@@ -5,7 +5,7 @@ name: '[Support] Move closed issues'
 on:
   workflow_call:
     secrets:
-      BITNAMI_BOT_TOKEN:
+      BITNAMI_SUPPORT_BOARD_TOKEN:
         required: true
 # Remove all permissions by default. Actions are performed by Bitnami Bot
 permissions: {}
@@ -46,7 +46,7 @@ jobs:
         with:
           # Support project
           project-url: https://github.com/orgs/bitnami/projects/4
-          github-token: ${{ secrets.BITNAMI_BOT_TOKEN }}
+          github-token: ${{ secrets.BITNAMI_SUPPORT_BOARD_TOKEN }}
       - name: Send to the Solved column
         id: send-solved
         uses: EndBug/project-fields@47306ad805cdba6fc5bb9e698b9d0c81c366c629
@@ -56,7 +56,7 @@ jobs:
           (steps.get-item.outputs.author == 'bitnami-bot' && contains(github.event.pull_request.labels.*.name, 'review-required'))
         with:
           project_url: https://github.com/orgs/bitnami/projects/4
-          github_token: ${{ secrets.BITNAMI_BOT_TOKEN }}
+          github_token: ${{ secrets.BITNAMI_SUPPORT_BOARD_TOKEN }}
           operation: set
           fields: Status
           values: Solved

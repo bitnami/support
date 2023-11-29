@@ -5,7 +5,7 @@ name: '[Support] Review based card movements'
 on:
   workflow_call:
     secrets:
-      BITNAMI_BOT_TOKEN:
+      BITNAMI_SUPPORT_BOARD_TOKEN:
         required: true
 # Remove all permissions by default
 permissions: {}
@@ -38,14 +38,14 @@ jobs:
         with:
           # Support project
           project-url: https://github.com/orgs/bitnami/projects/4
-          github-token: ${{ secrets.BITNAMI_BOT_TOKEN }}
+          github-token: ${{ secrets.BITNAMI_SUPPORT_BOARD_TOKEN }}
       - name: Move into In Progress
         # Move the card only if the actor is not a Bitnami member
         if: ${{ !contains(fromJson(env.BITNAMI_TEAM), github.actor) }}
         uses: EndBug/project-fields@47306ad805cdba6fc5bb9e698b9d0c81c366c629
         with:
           project_url: https://github.com/orgs/bitnami/projects/4
-          github_token: ${{ secrets.BITNAMI_BOT_TOKEN }}
+          github_token: ${{ secrets.BITNAMI_SUPPORT_BOARD_TOKEN }}
           operation: set
           fields: Status
           values: In progress
