@@ -80,6 +80,9 @@ while read -r legacy_project_board_column_id; do
   echo "new_project_status_field_option_id=${new_project_status_field_option_id}"
 
   while read -r legacy_project_board_card_id; do
+    if [[ -z "$legacy_project_board_card_id" ]]; then
+      continue
+    fi
     echo "legacy_project_board_card_id=${legacy_project_board_card_id}"
     legacy_project_board_card="$(jq -r 'map(select(.id == $legacy_project_board_card_id)) | .[0]' --argjson legacy_project_board_card_id "${legacy_project_board_card_id}" <<< "$legacy_project_board_cards")"
     legacy_project_board_card_content_url="$(jq -r '.content_url // ""' <<< "${legacy_project_board_card}")"
