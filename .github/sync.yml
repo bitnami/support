@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: APACHE-2.0
 
 # https://github.com/marketplace/actions/repo-file-sync-action#%EF%B8%8F-sync-configuration
-# Test project
 bitnami/support-test:
   - source: workflows/
     dest: .github/workflows/
@@ -45,11 +44,9 @@ bitnami/bncert:
 bitnami/healthcheck-tools:
   - source: workflows/
     dest: .github/workflows/
-# Uncoment for migration
-# bitnami/charts:
-#   - source: workflows/
-#     dest: .github/workflows/
-# bitnami/containers:
-#   - source: workflows/
-#     dest: .github/workflows/
-# 
+bitnami/charts:
+  - source: workflows/
+    dest: .github/workflows/
+bitnami/containers:
+  - source: workflows/
+    dest: .github/workflows/
