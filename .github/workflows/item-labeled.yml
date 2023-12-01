@@ -46,7 +46,7 @@ jobs:
             assignees=$(gh api "/orgs/bitnami/teams/${assignment_team}/members" |jq -cr 'sort_by(.login)|map(.login)|join(",")')
           fi
           label_keys=$(echo "$LABEL_MAPPING" | jq -cr 'keys')
-          assignable_label_keys=$(echo "$LABEL_MAPPING" | jq -cr '[to_entries[] | select(.value."assign-to-team-member"==true) | .key])
+          assignable_label_keys=$(echo "$LABEL_MAPPING" | jq -cr '[to_entries[] | select(.value."assign-to-team-member"==true) | .key]')
           echo "author=${author}" >> $GITHUB_OUTPUT
           echo "label-keys=${label_keys}" >> $GITHUB_OUTPUT
           echo "assignable-label-keys=${assignable_label_keys}" >> $GITHUB_OUTPUT
