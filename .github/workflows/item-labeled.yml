@@ -85,7 +85,7 @@ jobs:
       issues: write
     if : |
       github.event.action == 'labeled' && github.actor != 'bitnami-bot' &&
-      contains(fromJson(needs.get-info.outputs.assignable_label_keys),github.event.label.name)
+      contains(fromJson(needs.get-info.outputs.assignable-label-keys),github.event.label.name)
     steps:
       - name: Assign issue/PR
         uses: pozil/auto-assign-issue@edee9537367a8fbc625d27f9e10aa8bad47b8723
