@@ -22,6 +22,8 @@ The [`.env` file](.env) plays an important role here. It has the following infor
 ```json
 "triage": {
   "column": "Triage",
+  "assign-to-team-member": true,
+  "remove-previous-assignees": false,
   "labels-to-remove": [
     "in-progress",
     "on-hold",

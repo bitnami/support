@@ -19,6 +19,7 @@ jobs:
     outputs:
       label-mapping: ${{ steps.get-info.outputs.label-mapping }}
       label-keys: ${{ steps.get-info.outputs.label-keys }}
+      assignable-label-keys: ${{ steps.get-info.outputs.assignable-label-keys }}
       author: ${{ steps.get-info.outputs.author }}
       assignees: ${{ steps.get-info.outputs.assignees }}
     steps:
@@ -44,9 +45,11 @@ jobs:
           if [[ -n "$assignment_team" ]] && [[ -z "$assignees" ]]; then
             assignees=$(gh api "/orgs/bitnami/teams/${assignment_team}/members" |jq -cr 'sort_by(.login)|map(.login)|join(",")')
           fi
-          label_keys=$(echo "$LABEL_MAPPING"| jq -cr 'keys')
+          label_keys=$(echo "$LABEL_MAPPING" | jq -cr 'keys')
+          assignable_label_keys=$(echo "$LABEL_MAPPING" | jq -cr '[to_entries[] | select(.value."assign-to-team-member"==true) | .key])
           echo "author=${author}" >> $GITHUB_OUTPUT
           echo "label-keys=${label_keys}" >> $GITHUB_OUTPUT
+          echo "assignable-label-keys=${assignable_label_keys}" >> $GITHUB_OUTPUT
           echo "label-mapping=${LABEL_MAPPING}" >> $GITHUB_OUTPUT
           echo "assignees=${assignees}" >> $GITHUB_OUTPUT
   # For any opened or reopened issue, should be sent into Triage
@@ -82,13 +85,13 @@ jobs:
       issues: write
     if : |
       github.event.action == 'labeled' && github.actor != 'bitnami-bot' &&
-      contains(fromJson(needs.get-info.outputs.label-keys),github.event.label.name)
+      contains(fromJson(needs.get-info.outputs.assignable_label_keys),github.event.label.name)
     steps:
       - name: Assign issue/PR
         uses: pozil/auto-assign-issue@edee9537367a8fbc625d27f9e10aa8bad47b8723
         with:
           numOfAssignee: 1
-          removePreviousAssignees: ${{ github.event.label.name == 'in-progress' }}
+          removePreviousAssignees: ${{ fromJson(needs.get-info.outputs.label-mapping)[github.event.label.name].remove-previous-assignees }}
           assignees: ${{ needs.get-info.outputs.assignees }}
           # If we have repos with only one assignees we allow selfAssignment
           allowSelfAssign: ${{ needs.get-info.outputs.assignees == needs.get-info.outputs.author }}
