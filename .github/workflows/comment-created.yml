@@ -85,9 +85,10 @@ jobs:
       - name: Get item info
         id: get-item
         run: |
-          author="${{ github.event.issue != null && github.event.issue.user.login || github.event.pull_request.user.login }}"
-          number="${{ github.event.issue != null && github.event.issue.number || github.event.pull_request.number }}"
-          type="${{ github.event.issue != null && 'issue' || 'pull_request' }}"
+          # Note issue_comment event is slightly different than issues or pull_request. More info here: https://docs.github.com/en/webhooks/webhook-events-and-payloads#issue_comment
+          author="${{ github.event.issue.user.login }}"
+          number="${{ github.event.issue.number }}"
+          type="${{ github.event.issue.pull_request != null && 'pull_request' || 'issue' }}"
           echo "author=${author}" >> $GITHUB_OUTPUT
           echo "number=${number}" >> $GITHUB_OUTPUT
           echo "type=${type}" >> $GITHUB_OUTPUT

@@ -87,6 +87,7 @@ jobs:
       - name: Assign issue/PR
         uses: pozil/auto-assign-issue@edee9537367a8fbc625d27f9e10aa8bad47b8723
         with:
+          numOfAssignee: 1
           removePreviousAssignees: ${{ github.event.label.name == 'in-progress' }}
           assignees: ${{ needs.get-info.outputs.assignees }}
           # If we have repos with only one assignees we allow selfAssignment
