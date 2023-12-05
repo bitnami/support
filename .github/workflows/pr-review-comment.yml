@@ -1,0 +1,50 @@
+# Copyright VMware, Inc.
+# SPDX-License-Identifier: APACHE-2.0
+
+name: '[Support] PR review comment card movement'
+on:
+  workflow_call:
+    secrets:
+      BITNAMI_SUPPORT_BOARD_TOKEN:
+        required: true
+# Remove all permissions by default
+permissions: {}
+jobs:
+  comments_handler:
+    runs-on: ubuntu-latest
+    if: |
+      github.event.pull_request.user.login != 'bitnami-bot' &&
+      (!contains(github.event.pull_request.labels.*.name, 'bitnami'))
+    steps:
+      - name: Repo checkout
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
+        with:
+          fetch-depth: 1
+          repository: bitnami/support
+      - name: Load .env file
+        uses: xom9ikk/dotenv@de1ff27d319507880e6621e4d47424c677d95f68
+      - name: Add to board
+        id: add-to-project
+        uses: actions/add-to-project@0be3b6580ae2145e72e0ada85d693ab71a5f17d6
+        with:
+          # Support project
+          project-url: https://github.com/orgs/bitnami/projects/4
+          github-token: ${{ secrets.BITNAMI_SUPPORT_BOARD_TOKEN }}
+      - name: Move into Pending 
+        uses: EndBug/project-fields@47306ad805cdba6fc5bb9e698b9d0c81c366c629
+        if: ${{ contains(fromJson(env.BITNAMI_TEAM), github.event.comment.user.login) }}
+        with:
+          project_url: https://github.com/orgs/bitnami/projects/4
+          github_token: ${{ secrets.BITNAMI_SUPPORT_BOARD_TOKEN }}
+          operation: set
+          fields: Status
+          values: Pending
+      - name: Move into Triage/In Progress 
+        uses: EndBug/project-fields@47306ad805cdba6fc5bb9e698b9d0c81c366c629
+        if: ${{ ! contains(fromJson(env.BITNAMI_TEAM), github.event.comment.user.login) }}
+        with:
+          project_url: https://github.com/orgs/bitnami/projects/4
+          github_token: ${{ secrets.BITNAMI_SUPPORT_BOARD_TOKEN }}
+          operation: set
+          fields: Status
+          values: ${{ contains(github.event.pull_request.labels.*.name, 'in-progress') && 'In Progress' || 'Triage' }}
