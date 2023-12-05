@@ -23,7 +23,7 @@ jobs:
           # Support project
           project-url: https://github.com/orgs/bitnami/projects/4
           github-token: ${{ secrets.BITNAMI_SUPPORT_BOARD_TOKEN }}
-      - name: Move into Pending
+      - name: Move card
         uses: EndBug/project-fields@47306ad805cdba6fc5bb9e698b9d0c81c366c629
         with:
           project_url: https://github.com/orgs/bitnami/projects/4
