@@ -39,18 +39,12 @@ jobs:
           repository: bitnami/support
       - name: Load .env file
         uses: xom9ikk/dotenv@de1ff27d319507880e6621e4d47424c677d95f68
-      - name: Add to board
-        id: add-to-project
-        uses: actions/add-to-project@0be3b6580ae2145e72e0ada85d693ab71a5f17d6
-        with:
-          # Support project
-          project-url: https://github.com/orgs/bitnami/projects/4
-          github-token: ${{ secrets.BITNAMI_SUPPORT_BOARD_TOKEN }}
       - name: Move into Pending 
         uses: EndBug/project-fields@47306ad805cdba6fc5bb9e698b9d0c81c366c629
         if: ${{ contains(fromJson(env.BITNAMI_TEAM), inputs.actor) }}
         with:
           project_url: https://github.com/orgs/bitnami/projects/4
+          resource_url: ${{ inputs.resource_url }}
           github_token: ${{ secrets.BITNAMI_SUPPORT_BOARD_TOKEN }}
           operation: set
           fields: Status
@@ -60,6 +54,7 @@ jobs:
         if: ${{ !contains(fromJson(env.BITNAMI_TEAM), inputs.actor) }}
         with:
           project_url: https://github.com/orgs/bitnami/projects/4
+          resource_url: ${{ inputs.resource_url }}
           github_token: ${{ secrets.BITNAMI_SUPPORT_BOARD_TOKEN }}
           operation: set
           fields: Status
