@@ -4,6 +4,22 @@
 name: '[Support] PR review comment card movement'
 on:
   workflow_call:
+    inputs:
+      author:
+        required: true
+        type: string
+      actor:
+        required: true
+        type: string
+      resource_url:
+        required: true
+        type: string
+      labels:
+        required: true
+        type: string
+      author_association:
+        required: false
+        type: string
     secrets:
       BITNAMI_SUPPORT_BOARD_TOKEN:
         required: true
@@ -13,8 +29,8 @@ jobs:
   comments_handler:
     runs-on: ubuntu-latest
     if: |
-      github.event.pull_request.user.login != 'bitnami-bot' &&
-      (!contains(github.event.pull_request.labels.*.name, 'bitnami'))
+      inputs.author != 'bitnami-bot' &&
+      (!contains(fromJson(inputs.labels).*.name, 'bitnami'))
     steps:
       - name: Repo checkout
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
@@ -32,7 +48,7 @@ jobs:
           github-token: ${{ secrets.BITNAMI_SUPPORT_BOARD_TOKEN }}
       - name: Move into Pending 
         uses: EndBug/project-fields@47306ad805cdba6fc5bb9e698b9d0c81c366c629
-        if: ${{ contains(fromJson(env.BITNAMI_TEAM), github.event.comment.user.login) }}
+        if: ${{ contains(fromJson(env.BITNAMI_TEAM), inputs.actor) }}
         with:
           project_url: https://github.com/orgs/bitnami/projects/4
           github_token: ${{ secrets.BITNAMI_SUPPORT_BOARD_TOKEN }}
@@ -41,10 +57,10 @@ jobs:
           values: Pending
       - name: Move into Triage/In Progress 
         uses: EndBug/project-fields@47306ad805cdba6fc5bb9e698b9d0c81c366c629
-        if: ${{ ! contains(fromJson(env.BITNAMI_TEAM), github.event.comment.user.login) }}
+        if: ${{ !contains(fromJson(env.BITNAMI_TEAM), inputs.actor) }}
         with:
           project_url: https://github.com/orgs/bitnami/projects/4
           github_token: ${{ secrets.BITNAMI_SUPPORT_BOARD_TOKEN }}
           operation: set
           fields: Status
-          values: ${{ contains(github.event.pull_request.labels.*.name, 'in-progress') && 'In Progress' || 'Triage' }}
+          values: ${{ contains(fromJson(inputs.labels).*.name, 'in-progress') && 'In Progress' || 'Triage' }}
