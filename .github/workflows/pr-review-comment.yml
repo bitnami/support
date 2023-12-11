@@ -30,7 +30,7 @@ jobs:
     runs-on: ubuntu-latest
     if: |
       inputs.author != 'bitnami-bot' &&
-      (!contains(fromJson(inputs.labels).*.name, 'bitnami'))
+      (!contains(fromJson(inputs.labels), 'bitnami'))
     steps:
       - name: Repo checkout
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
@@ -58,4 +58,4 @@ jobs:
           github_token: ${{ secrets.BITNAMI_SUPPORT_BOARD_TOKEN }}
           operation: set
           fields: Status
-          values: ${{ contains(fromJson(inputs.labels).*.name, 'in-progress') && 'In Progress' || 'Triage' }}
+          values: ${{ contains(fromJson(inputs.labels), 'in-progress') && 'In Progress' || 'Triage' }}
