@@ -51,7 +51,7 @@ jobs:
           operation: set
           fields: Status
           values: Pending
-      - name: Move into In Progress
+      - name: Move into In progress
         uses: EndBug/project-fields@47306ad805cdba6fc5bb9e698b9d0c81c366c629
         if: |
           (github.actor != 'bitnami-bot' || github.event.issue.user.login != 'bitnami-bot' || github.event.issue.pull_request == null) &&
@@ -68,7 +68,8 @@ jobs:
         if: |
           (github.actor != 'bitnami-bot' || github.event.issue.user.login != 'bitnami-bot' || github.event.issue.pull_request == null) &&
           (!contains(fromJson(env.BITNAMI_TEAM), github.actor)) &&
-          (!contains(github.event.issue.labels.*.name, 'in-progress'))
+          (!contains(github.event.issue.labels.*.name, 'in-progress')) &&
+          (!contains(github.event.issue.labels.*.name, 'bitnami'))
         with:
           project_url: https://github.com/orgs/bitnami/projects/4
           github_token: ${{ secrets.BITNAMI_SUPPORT_BOARD_TOKEN }}
