@@ -76,9 +76,10 @@ jobs:
           number="${{ github.event.issue != null && github.event.issue.number || github.event.pull_request.number }}"
           type="${{ github.event.issue != null && 'issue' || 'pull_request' }}"
           repo_name="${{ github.event.repository.name }}"
+          [[ "${BITNAMI_TEAM}" == *"${author}"* ]] && group="support" || group="triage"
           assignment=$(echo "$REPO_ASSIGNMENT" | jq -cr ".\"${repo_name}\" // .default")
-          assignment_team=$(echo "$assignment" | jq -cr ".\"triage-teams\" // empty")
-          assignees=$(echo "$assignment" | jq -cr ".\"triage-assignees\" // empty")
+          assignment_team=$(echo "$assignment" | jq -cr ".\"${group}-teams\" // empty")
+          assignees=$(echo "$assignment" | jq -cr ".\"${group}-assignees\" // empty")
           # If there is no assignees and the team is not empty
           if [[ -n "$assignment_team" ]] && [[ -z "$assignees" ]]; then
             assignees=$(gh api "/orgs/bitnami/teams/${assignment_team}/members" |jq -cr 'sort_by(.login)|map(.login)|join(",")')
