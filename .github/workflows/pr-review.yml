@@ -24,7 +24,7 @@ jobs:
           project-url: https://github.com/orgs/bitnami/projects/4
           github-token: ${{ secrets.BITNAMI_SUPPORT_BOARD_TOKEN }}
       - name: Move into Pending
-        uses: EndBug/project-fields@07b55f84ae8cf995282c1cee5c533c03cc961a3f
+        uses: EndBug/project-fields@e0c02c5ac19249db2ced10f6ca8beeb3acaf1b82
         if: ${{ github.event.review.state == 'changes_requested' }}
         with:
           project_url: https://github.com/orgs/bitnami/projects/4
@@ -33,7 +33,7 @@ jobs:
           fields: Status
           values: Pending
       - name: Move into In progress/Triage
-        uses: EndBug/project-fields@07b55f84ae8cf995282c1cee5c533c03cc961a3f
+        uses: EndBug/project-fields@e0c02c5ac19249db2ced10f6ca8beeb3acaf1b82
         if: ${{ github.event.review.state == 'dismissed' }}
         with:
           project_url: https://github.com/orgs/bitnami/projects/4
