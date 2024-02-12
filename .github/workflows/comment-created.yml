@@ -30,7 +30,7 @@ jobs:
           project-url: https://github.com/orgs/bitnami/projects/4
           github-token: ${{ secrets.BITNAMI_SUPPORT_BOARD_TOKEN }}
       - name: Move into From Build Maintenance
-        uses: EndBug/project-fields@e0c02c5ac19249db2ced10f6ca8beeb3acaf1b82
+        uses: EndBug/project-fields@653e3a1c8d45caa6fbffe56c834bd3576374d322
         # The comment was created by bitnami-bot in a pull_request created by bitnami-bot
         if: ${{ github.actor == 'bitnami-bot' && github.event.issue.user.login == 'bitnami-bot' && github.event.issue.pull_request != null }}
         with:
@@ -40,7 +40,7 @@ jobs:
           fields: Status
           values: Build Maintenance
       - name: Move into Pending
-        uses: EndBug/project-fields@e0c02c5ac19249db2ced10f6ca8beeb3acaf1b82
+        uses: EndBug/project-fields@653e3a1c8d45caa6fbffe56c834bd3576374d322
         if: |
           (github.actor != 'bitnami-bot' || github.event.issue.user.login != 'bitnami-bot' || github.event.issue.pull_request == null) &&
           contains(fromJson(env.BITNAMI_TEAM), github.actor) &&
@@ -52,7 +52,7 @@ jobs:
           fields: Status
           values: Pending
       - name: Move into In progress
-        uses: EndBug/project-fields@e0c02c5ac19249db2ced10f6ca8beeb3acaf1b82
+        uses: EndBug/project-fields@653e3a1c8d45caa6fbffe56c834bd3576374d322
         if: |
           (github.actor != 'bitnami-bot' || github.event.issue.user.login != 'bitnami-bot' || github.event.issue.pull_request == null) &&
           (!contains(fromJson(env.BITNAMI_TEAM), github.actor)) &&
@@ -64,7 +64,7 @@ jobs:
           fields: Status
           values: In progress
       - name: Move into Triage
-        uses: EndBug/project-fields@e0c02c5ac19249db2ced10f6ca8beeb3acaf1b82
+        uses: EndBug/project-fields@653e3a1c8d45caa6fbffe56c834bd3576374d322
         if: |
           (github.actor != 'bitnami-bot' || github.event.issue.user.login != 'bitnami-bot' || github.event.issue.pull_request == null) &&
           (!contains(fromJson(env.BITNAMI_TEAM), github.actor)) &&
