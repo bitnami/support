@@ -36,7 +36,7 @@ jobs:
           remove-labels: in-progress, on-hold
       - name: Add to board
         id: add-to-project
-        uses: actions/add-to-project@0be3b6580ae2145e72e0ada85d693ab71a5f17d6
+        uses: actions/add-to-project@0609a2702eefb44781da00f8e04901d6e5cd2b92
         if: |
           steps.get-item.outputs.author != 'bitnami-bot' ||
           (steps.get-item.outputs.author == 'bitnami-bot' && contains(github.event.pull_request.labels.*.name, 'review-required'))
@@ -46,7 +46,7 @@ jobs:
           github-token: ${{ secrets.BITNAMI_SUPPORT_BOARD_TOKEN }}
       - name: Send to the Solved column
         id: send-solved
-        uses: EndBug/project-fields@653e3a1c8d45caa6fbffe56c834bd3576374d322
+        uses: EndBug/project-fields@d1a7a045d10d3342a53de0195c14c3ae72d19272
         # Send to solve only the issues and PRs created by users or the automated PRs with human review required
         if: |
           steps.get-item.outputs.author != 'bitnami-bot' ||

@@ -25,7 +25,7 @@ jobs:
           fetch-depth: 1
           repository: bitnami/support
       - name: Load .env file
-        uses: xom9ikk/dotenv@de1ff27d319507880e6621e4d47424c677d95f68
+        uses: xom9ikk/dotenv@ac290ca23a42155a0cba1031d23afa46240116a9
       - name: Get item info
         id: get-item
         run: |
@@ -37,14 +37,14 @@ jobs:
           echo "type=${type}" >> $GITHUB_OUTPUT
       - name: Add to board
         id: add-to-project
-        uses: actions/add-to-project@0be3b6580ae2145e72e0ada85d693ab71a5f17d6
+        uses: actions/add-to-project@0609a2702eefb44781da00f8e04901d6e5cd2b92
         if: ${{steps.get-item.outputs.author != 'bitnami-bot' || steps.get-item.outputs.type != 'pull_request'}}
         with:
           # Support project
           project-url: https://github.com/orgs/bitnami/projects/4
           github-token: ${{ secrets.BITNAMI_SUPPORT_BOARD_TOKEN }}
       - name: Add to column
-        uses: EndBug/project-fields@653e3a1c8d45caa6fbffe56c834bd3576374d322
+        uses: EndBug/project-fields@d1a7a045d10d3342a53de0195c14c3ae72d19272
         if: ${{steps.get-item.outputs.author != 'bitnami-bot' || steps.get-item.outputs.type != 'pull_request'}}
         with:
           project_url: https://github.com/orgs/bitnami/projects/4
@@ -66,7 +66,7 @@ jobs:
           fetch-depth: 1
           repository: bitnami/support
       - name: Load .env file
-        uses: xom9ikk/dotenv@de1ff27d319507880e6621e4d47424c677d95f68
+        uses: xom9ikk/dotenv@ac290ca23a42155a0cba1031d23afa46240116a9
       - name: Get item info
         id: get-item
         env:
