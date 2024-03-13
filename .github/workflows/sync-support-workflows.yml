@@ -15,7 +15,7 @@ jobs:
       contents: read
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
+        uses: actions/checkout@9bb56186c3b09b4f86b1c65136769dd318469633
       - name: Run GitHub File Sync
         uses: BetaHuhn/repo-file-sync-action@3023dac7ce66c18b119e2012348437eadeaea116
         with:
