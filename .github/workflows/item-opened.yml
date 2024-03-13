@@ -25,7 +25,7 @@ jobs:
           fetch-depth: 1
           repository: bitnami/support
       - name: Load .env file
-        uses: xom9ikk/dotenv@de1ff27d319507880e6621e4d47424c677d95f68
+        uses: xom9ikk/dotenv@ac290ca23a42155a0cba1031d23afa46240116a9
       - name: Get item info
         id: get-item
         run: |
@@ -66,7 +66,7 @@ jobs:
           fetch-depth: 1
           repository: bitnami/support
       - name: Load .env file
-        uses: xom9ikk/dotenv@de1ff27d319507880e6621e4d47424c677d95f68
+        uses: xom9ikk/dotenv@ac290ca23a42155a0cba1031d23afa46240116a9
       - name: Get item info
         id: get-item
         env:
