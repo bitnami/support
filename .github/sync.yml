@@ -3,44 +3,44 @@
 
 # https://github.com/marketplace/actions/repo-file-sync-action#%EF%B8%8F-sync-configuration
 bitnami/vms:
-  - source: workflows/
+  - source: src/.github/workflows/
     dest: .github/workflows/
 bitnami/vulndb:
-  - source: workflows/
+  - source: src/.github/workflows/
     dest: .github/workflows/
 bitnami/readme-generator-for-helm:
-  - source: workflows/
+  - source: src/.github/workflows/
     dest: .github/workflows/
 bitnami/minideb:
-  - source: workflows/
+  - source: src/.github/workflows/
     dest: .github/workflows/
 bitnami/chart-categories-action:
-  - source: workflows/
+  - source: src/.github/workflows/
     dest: .github/workflows/
 bitnami/wait-for-port:
-  - source: workflows/
+  - source: src/.github/workflows/
     dest: .github/workflows/
 bitnami/render-template:
-  - source: workflows/
+  - source: src/.github/workflows/
     dest: .github/workflows/
 bitnami/ini-file:
-  - source: workflows/
+  - source: src/.github/workflows/
     dest: .github/workflows/
 bitnami/gonit:
-  - source: workflows/
+  - source: src/.github/workflows/
     dest: .github/workflows/
 bitnami/bndiagnostic:
-  - source: workflows/
+  - source: src/.github/workflows/
     dest: .github/workflows/
 bitnami/bncert:
-  - source: workflows/
+  - source: src/.github/workflows/
     dest: .github/workflows/
 bitnami/healthcheck-tools:
-  - source: workflows/
+  - source: src/.github/workflows/
     dest: .github/workflows/
 bitnami/charts:
-  - source: workflows/
+  - source: src/.github/workflows/
     dest: .github/workflows/
 bitnami/containers:
-  - source: workflows/
+  - source: src/.github/workflows/
     dest: .github/workflows/
