@@ -40,7 +40,7 @@ jobs:
       - name: Load .env file
         uses: xom9ikk/dotenv@ac290ca23a42155a0cba1031d23afa46240116a9
       - name: Move into Pending 
-        uses: EndBug/project-fields@d1a7a045d10d3342a53de0195c14c3ae72d19272
+        uses: EndBug/project-fields@105149644dad690757027aba5aee00493625ed2e
         if: ${{ contains(fromJson(env.BITNAMI_TEAM), inputs.actor) }}
         with:
           project_url: https://github.com/orgs/bitnami/projects/4
@@ -50,7 +50,7 @@ jobs:
           fields: Status
           values: Pending
       - name: Move into Triage/In progress
-        uses: EndBug/project-fields@d1a7a045d10d3342a53de0195c14c3ae72d19272
+        uses: EndBug/project-fields@105149644dad690757027aba5aee00493625ed2e
         if: ${{ !contains(fromJson(env.BITNAMI_TEAM), inputs.actor) }}
         with:
           project_url: https://github.com/orgs/bitnami/projects/4
