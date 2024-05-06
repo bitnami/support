@@ -62,7 +62,7 @@ These workflows are located in `/workflows` and they are synced with the reposit
 This workflow copies existing cards from a repository Project (Classic) board into the new organization Project (ProjectV2) board, in our case, we will use the [Bitnami Support board](https://github.com/orgs/bitnami/projects/4/views/1). To use it we only need to create a workflow like this one in our repository:
 
 ```yaml
-# Copyright VMware, Inc.
+# Copyright Broadcom, Inc. All Rights Reserved.
 # SPDX-License-Identifier: APACHE-2.0
 
 name: '[Support] Cards migration'
