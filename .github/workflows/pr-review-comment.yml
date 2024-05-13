@@ -17,6 +17,9 @@ on:
       labels:
         required: true
         type: string
+      review_state:
+        required: true
+        type: string
       author_association:
         required: false
         type: string
@@ -41,7 +44,9 @@ jobs:
         uses: xom9ikk/dotenv@ac290ca23a42155a0cba1031d23afa46240116a9
       - name: Move into Pending 
         uses: EndBug/project-fields@52c2f411fd7e8982ef41656212d0f6db8de5468b
-        if: ${{ contains(fromJson(env.BITNAMI_TEAM), inputs.actor) }}
+        if: |
+          contains(fromJson(env.BITNAMI_TEAM), inputs.actor) &&
+          inputs.review_state != 'APPROVED'
         with:
           project_url: https://github.com/orgs/bitnami/projects/4
           resource_url: ${{ inputs.resource_url }}
