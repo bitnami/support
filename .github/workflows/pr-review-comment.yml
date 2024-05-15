@@ -18,7 +18,7 @@ on:
         required: true
         type: string
       review_state:
-        required: true
+        required: false
         type: string
       author_association:
         required: false
