@@ -46,7 +46,7 @@ jobs:
         uses: EndBug/project-fields@52c2f411fd7e8982ef41656212d0f6db8de5468b
         if: |
           contains(fromJson(env.BITNAMI_TEAM), inputs.actor) &&
-          inputs.review_state != 'APPROVED'
+          inputs.review_state != 'approved'
         with:
           project_url: https://github.com/orgs/bitnami/projects/4
           resource_url: ${{ inputs.resource_url }}
