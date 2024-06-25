@@ -24,7 +24,7 @@ jobs:
         uses: xom9ikk/dotenv@ac290ca23a42155a0cba1031d23afa46240116a9
       - name: Add to board
         id: add-to-project
-        uses: actions/add-to-project@9bfe908f2eaa7ba10340b31e314148fcfe6a2458
+        uses: actions/add-to-project@244f685bbc3b7adfa8466e08b698b5577571133e
         with:
           # Support project
           project-url: https://github.com/orgs/bitnami/projects/4
