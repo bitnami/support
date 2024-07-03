@@ -46,7 +46,7 @@ jobs:
           github-token: ${{ secrets.BITNAMI_SUPPORT_BOARD_TOKEN }}
       - name: Send to the Solved column
         id: send-solved
-        uses: EndBug/project-fields@33e4bfca42b8707919313a8bc93d39b098be36f0
+        uses: EndBug/project-fields@b7e5e6b4fdec24a207eddad78ff2a5963ba34566
         # Send to solve only the issues and PRs created by users or the automated PRs with human review required
         if: |
           steps.get-item.outputs.author != 'bitnami-bot' ||
