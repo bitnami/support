@@ -95,10 +95,7 @@ jobs:
           add-labels: 'automated, auto-merge'
       - name: Verify labeling
         uses: fmulero/labeler@f49bf680252fc8ac12cbebb6e0ed8ea19d0712da
-        if: |
-          steps.get-item.outputs.type != 'issue' &&
-          steps.get-item.outputs.author != 'bitnami-bot' &&
-          contains(fromJson(env.BITNAMI_TEAM), steps.get-item.outputs.author) &&
+        if: ${{ steps.get-item.outputs.type != 'issue' && contains(fromJson(env.BITNAMI_TEAM), steps.get-item.outputs.author) }}
         with:
           # In the past, we added the repo-token to ensure adding this label triggered a workflow
           # It is no longer needed since the changelog PR will automatically trigger a new workflow
