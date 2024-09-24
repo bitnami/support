@@ -98,8 +98,8 @@ jobs:
         if: ${{ steps.get-item.outputs.type != 'issue' && contains(fromJson(env.BITNAMI_TEAM), steps.get-item.outputs.author) }}
         with:
           # Bitnami bot token is required to trigger CI workflows
-          # Not needed for bitnami/charts repo since the changelog PR will automatically trigger a new workflow
-          repo-token: ${{ github.event.repository.name == 'bitnami/charts' && github.token || secrets.BITNAMI_SUPPORT_BOARD_TOKEN}}
+          # Not needed for charts repo since the changelog PR will automatically trigger a new workflow
+          repo-token: ${{ github.event.repository.name == 'charts' && github.token || secrets.BITNAMI_SUPPORT_BOARD_TOKEN}}
           add-labels: verify
       - name: Triage labeling
         uses: fmulero/labeler@f49bf680252fc8ac12cbebb6e0ed8ea19d0712da
