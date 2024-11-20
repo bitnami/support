@@ -88,7 +88,7 @@ jobs:
       contains(fromJson(needs.get-info.outputs.assignable-label-keys),github.event.label.name)
     steps:
       - name: Assign issue/PR
-        uses: pozil/auto-assign-issue@c5bca5027e680b9e8411b826d16947afd8c76b32
+        uses: pozil/auto-assign-issue@b787bcda4fa1620522e73e7a5fe0f3b57b03b6ad
         with:
           numOfAssignee: 1
           removePreviousAssignees: ${{ fromJson(needs.get-info.outputs.label-mapping)[github.event.label.name].remove-previous-assignees }}
