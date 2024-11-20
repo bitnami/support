@@ -110,7 +110,7 @@ jobs:
           add-labels: ${{ (contains(fromJson(env.BITNAMI_TEAM), steps.get-item.outputs.author)) && 'bitnami' || 'triage' }}
           remove-labels: on-hold, in-progress, solved, ${{ (contains(fromJson(env.BITNAMI_TEAM), steps.get-item.outputs.author)) && 'triage' || 'bitnami' }}
       - name: Assign issue
-        uses: pozil/auto-assign-issue@c5bca5027e680b9e8411b826d16947afd8c76b32
+        uses: pozil/auto-assign-issue@b787bcda4fa1620522e73e7a5fe0f3b57b03b6ad
         if: ${{ steps.get-item.outputs.author != 'bitnami-bot' }}
         with:
           numOfAssignee: 1
