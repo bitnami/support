@@ -40,7 +40,7 @@ jobs:
       - name: Move into In progress
         # Move the card only if the actor is not a Bitnami member
         if: ${{ !contains(fromJson(env.BITNAMI_TEAM), github.actor) }}
-        uses: EndBug/project-fields@a843f1eac1a2772a9d475cfd4bb32d68225c558c
+        uses: EndBug/project-fields@6f7fc6da0386e32a70b25a766c6c01aef52c7d6b
         with:
           project_url: https://github.com/orgs/bitnami/projects/4
           github_token: ${{ secrets.BITNAMI_SUPPORT_BOARD_TOKEN }}
