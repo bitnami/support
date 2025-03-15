@@ -23,5 +23,5 @@ jobs:
           GH_PAT: ${{ secrets.BITNAMI_BOT_SUPPORT_TOKEN }}
           PR_LABELS: support
           GIT_USERNAME: bitnami-bot
-          GIT_EMAIL: bitnami-bot@vmware.com
-          COMMIT_BODY: "\n\nSigned-off-by: bitnami-bot <bitnami-bot@vmware.com>"
+          GIT_EMAIL: bitnami.bot@broadcom.com
+          COMMIT_BODY: "\n\nSigned-off-by: bitnami-bot <bitnami.bot@broadcom.com>"
