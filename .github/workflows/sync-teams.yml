@@ -37,7 +37,7 @@ jobs:
             echo "Replacing $BITNAMI_TEAM for $TEAM_MEMBERS"
             sed -i "s|BITNAMI_TEAM=.*$|BITNAMI_TEAM='${TEAM_MEMBERS}'|g" .env
             git config user.name "bitnami-bot"
-            git config user.email "bitnami-bot@vmware.com"
+            git config user.email "bitnami.bot@broadcom.com"
             git commit -s -m"[bitnami-bot] Updating Bitnami team members" .env
             git push
           else
