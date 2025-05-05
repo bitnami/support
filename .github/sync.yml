@@ -44,3 +44,6 @@ bitnami/charts:
 bitnami/containers:
   - source: workflows/
     dest: .github/workflows/
+bitnami/charts-syncer:
+  - source: workflows/
+    dest: .github/workflows/
