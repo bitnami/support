@@ -14,9 +14,6 @@ bitnami/readme-generator-for-helm:
 bitnami/minideb:
   - source: workflows/
     dest: .github/workflows/
-bitnami/chart-categories-action:
-  - source: workflows/
-    dest: .github/workflows/
 bitnami/wait-for-port:
   - source: workflows/
     dest: .github/workflows/
@@ -24,9 +21,6 @@ bitnami/render-template:
   - source: workflows/
     dest: .github/workflows/
 bitnami/ini-file:
-  - source: workflows/
-    dest: .github/workflows/
-bitnami/gonit:
   - source: workflows/
     dest: .github/workflows/
 bitnami/bndiagnostic:
