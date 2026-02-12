@@ -16,6 +16,10 @@ on:
     secrets:
       webhook-url:
         required: true
+    emoji:
+        type: string
+        required: false
+        default: '⚠️'
 # Remove all permissions by default
 permissions: {}
 jobs:
@@ -29,10 +33,11 @@ jobs:
           GH_WORKFLOW: ${{ inputs.workflow }}
           GH_REPOSITORY: ${{ inputs.repository != '' && inputs.repository || github.repository }}
           WEBHOOK_URL: ${{ secrets.webhook-url }}
+          EMOJI: ${{ inputs.emoji }}
         run: |
           tmp_file=$(mktemp)
           cat >"${tmp_file}"<<EOF
-          ⚠️ [${GH_REPOSITORY}] Failure detected on '${GH_WORKFLOW}' workflow ⚠️
+          ${EMOJI} [${GH_REPOSITORY}] Failure detected on '${GH_WORKFLOW}' workflow ⚠️
           📑 See details <${JOB_URL}|here>.
           EOF
 
