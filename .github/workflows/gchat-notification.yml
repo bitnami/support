@@ -13,13 +13,13 @@ on:
         required: true
       repository:
         type: string
-    secrets:
-      webhook-url:
-        required: true
-    emoji:
+      emoji:
         type: string
         required: false
         default: '⚠️'
+    secrets:
+      webhook-url:
+        required: true
 # Remove all permissions by default
 permissions: {}
 jobs:
