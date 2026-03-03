@@ -23,9 +23,6 @@ bitnami/render-template:
 bitnami/ini-file:
   - source: workflows/
     dest: .github/workflows/
-bitnami/bndiagnostic:
-  - source: workflows/
-    dest: .github/workflows/
 bitnami/bncert:
   - source: workflows/
     dest: .github/workflows/
