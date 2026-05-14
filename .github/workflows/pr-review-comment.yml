@@ -41,7 +41,7 @@ jobs:
           fetch-depth: 1
           repository: bitnami/support
       - name: Load .env file
-        uses: xom9ikk/dotenv@ac290ca23a42155a0cba1031d23afa46240116a9
+        uses: xom9ikk/dotenv@d0a56edc74279820eabbe34477511327e710d0de
       - name: Move into Pending 
         uses: EndBug/project-fields@31118fcc0b7dc7d470668708f5d8448176cfbac5
         if: |
