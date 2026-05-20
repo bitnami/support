@@ -9,18 +9,14 @@ updates:
     schedule:
       interval: "daily"
     reviewers:
-      - fmulero
       - carrodher
     assignees:
-      - fmulero
       - carrodher
   - package-ecosystem: "github-actions"
     directory: "/workflows"
     schedule:
       interval: "daily"
     reviewers:
-      - fmulero
       - carrodher
     assignees:
-      - fmulero
       - carrodher
