@@ -44,7 +44,7 @@ jobs:
           project-url: https://github.com/orgs/bitnami/projects/4
           github-token: ${{ secrets.BITNAMI_SUPPORT_BOARD_TOKEN }}
       - name: Add to column
-        uses: EndBug/project-fields@9b0b926d1980a70157ce73d6045fe3e9e6ce0dbd
+        uses: EndBug/project-fields@9d2d37b643e945ed4b0a2bbca6c775a563072016
         if: ${{steps.get-item.outputs.author != 'bitnami-bot' || steps.get-item.outputs.type != 'pull_request'}}
         with:
           project_url: https://github.com/orgs/bitnami/projects/4
