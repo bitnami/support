@@ -69,7 +69,7 @@ jobs:
           project-url: https://github.com/orgs/bitnami/projects/4
           github-token: ${{ secrets.BITNAMI_SUPPORT_BOARD_TOKEN }}
       - name: Add to column
-        uses: EndBug/project-fields@9d2d37b643e945ed4b0a2bbca6c775a563072016
+        uses: EndBug/project-fields@c67a1b3f06074e390e82506cc20c93c5261e8d36
         with:
           project_url: https://github.com/orgs/bitnami/projects/4
           github_token: ${{ secrets.BITNAMI_SUPPORT_BOARD_TOKEN }}
