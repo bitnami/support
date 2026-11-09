@@ -63,7 +63,7 @@ jobs:
     steps:
       - name: Add to board
         id: add-to-project
-        uses: actions/add-to-project@5afcf98fcd03f1c2f92c3c83f58ae24323cc57fd
+        uses: actions/add-to-project@f2c1f1fa649a891be84948ea89b5dfba1526ef05
         with:
           # Support project
           project-url: https://github.com/orgs/bitnami/projects/4
